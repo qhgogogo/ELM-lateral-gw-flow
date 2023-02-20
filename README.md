@@ -12,3 +12,7 @@ domain_180unique_c220607.nc: domain data for the VH case
 surfdata_180unique_c220607.nc: surface data for the VH case
 domain_washita50x35u2_c221228.nc:domain data for the Little Washita watershed case
 surfdata_washita50x35u2_c221228.nc: surface data for the Little Washita watershed case
+
+/ELM_case_build_scripts folder contains the bash scripts for setting up and building the ELM_lat cases in this manuscript.
+ELM_ideal_hillslopes.sh is the bash script for the three idealized hillslopes
+ELM_washita_lateral.sh is the bash script for the Little Washita watershed
