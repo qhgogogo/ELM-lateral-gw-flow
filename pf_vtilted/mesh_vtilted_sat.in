@@ -1,0 +1,122 @@
+#Description: 3D test problem for unstructured richards equation with mixed
+#             elements in explicit format
+
+SIMULATION
+  SIMULATION_TYPE SUBSURFACE
+  PROCESS_MODELS
+    SUBSURFACE_FLOW flow
+      MODE RICHARDS
+    /
+  /
+END
+
+SUBSURFACE
+
+#=========================== numerical methods ================================
+NUMERICAL_METHODS FLOW
+
+END
+
+
+
+#=========================== discretization ===================================
+GRID
+  TYPE UNSTRUCTURED mesh_vtilted_sat15_8x10x15m.h5
+END
+
+#=========================== fluid properties =================================
+FLUID_PROPERTY
+  DIFFUSION_COEFFICIENT 1.d-9
+END
+
+#=========================== material properties ==============================
+MATERIAL_PROPERTY soil1
+  ID 1
+  POROSITY 0.4668d0
+  TORTUOSITY 0.5d0
+  CHARACTERISTIC_CURVES default
+  PERMEABILITY
+    PERM_X 1.69d-12
+    PERM_Y 1.69d-12
+    PERM_Z 8.99e-14
+  /
+END
+
+#=========================== characteristic curves ============================
+CHARACTERISTIC_CURVES default
+  SATURATION_FUNCTION BROOKS_COREY
+    ALPHA 6.289d-4
+    LAMBDA 0.157d0
+    LIQUID_RESIDUAL_SATURATION 0.0d0
+    SMOOTH
+  /
+  PERMEABILITY_FUNCTION MUALEM_BC_LIQ
+    LAMBDA 0.157d0
+    LIQUID_RESIDUAL_SATURATION 0.0d0
+  /
+END
+
+#=========================== output options ===================================
+OUTPUT
+  TIMES d 5. 10. 15. 20. 25. 30. 35. 40. 45. 50. 55. 60. 65. 70. 75. 80. 85. 90. 95. 100.
+  FORMAT HDF5
+  #FORMAT TECPLOT POINT
+END
+
+#=========================== times ============================================
+TIME
+  FINAL_TIME 200.d0 d
+  MAXIMUM_TIMESTEP_SIZE 10.d0 d
+END
+
+REFERENCE_PRESSURE 101325.
+
+#=========================== regions ==========================================
+REGION all
+  COORDINATES
+    -50.d0 -50.d0 -50.d0
+    1000.d0 1000.d0 1000.d0
+  /
+END
+
+#=========================== flow conditions ==================================
+DATASET Pressure
+	FILENAME ic_vtilted_sat15_8x10x15m.h5
+END
+
+FLOW_CONDITION initial
+  TYPE
+    PRESSURE DIRICHLET
+  /
+  #LIQUID_PRESSURE 60000
+  PRESSURE DATASET Pressure
+END
+
+FLOW_CONDITION seepage
+  TYPE
+    PRESSURE SEEPAGE
+  /
+  DATUM 0.d0 0.d0 2.5d0
+  PRESSURE 101325 ! Pa
+END
+#=========================== condition couplers ===============================
+# initial condition
+INITIAL_CONDITION
+  FLOW_CONDITION initial
+  REGION all
+END
+
+#=========================== stratigraphy couplers ============================
+STRATA
+  REGION all
+  MATERIAL soil1
+END
+END_SUBSURFACE
+
+
+
+
+
+
+
+
